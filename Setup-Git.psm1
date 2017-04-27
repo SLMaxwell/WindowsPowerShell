@@ -9,6 +9,7 @@ function Setup-Git {
 	git config --global difftool.prompt false
 	git config --global mergetool.prompt false
 	git config --global mergetool.keepbackup false
+  git config --global fetch.prune true
 	# rebase on pull instead of merge
 	git config --global branch.autosetuprebase always 
 	
@@ -26,7 +27,7 @@ function Setup-Git {
 	
   	# Branching Aliases
 	git config --global alias.br branch
-  	git config --global alias.db '!powershell -ExecutionPolicy ByPass Delete-Branch'
+  git config --global alias.db '!powershell -ExecutionPolicy ByPass Delete-Branch'
 	git config --global alias.dlb '!powershell -ExecutionPolicy ByPass Delete-Branch -l'
 	git config --global alias.drb '!powershell -ExecutionPolicy ByPass Delete-Branch -r'
 	git config --global alias.track '!powershell -ExecutionPolicy ByPass Track-Branches'
@@ -85,45 +86,45 @@ function Setup-Git {
 	}
 }
 
-function Setup-Truefit {
-	push-location
-	cd ~
+# function Setup-Truefit {
+# 	push-location
+# 	cd ~
 	
-	$netrc = "_netrc";
+# 	$netrc = "_netrc";
 	
-	if((Test-Path $netrc) -eq $False) {
-		$login = Read-Host "Enter TrueFit login"
-		$password = ConvertTo-PlainText (Read-Host "Enter password" -AsSecureString)
+# 	if((Test-Path $netrc) -eq $False) {
+# 		$login = Read-Host "Enter TrueFit login"
+# 		$password = ConvertTo-PlainText (Read-Host "Enter password" -AsSecureString)
 	
-		if($login -and $password) {
-			Add-Content -path $netrc -value "machine git.truefitsolutions.com"
-			Add-Content -path $netrc -value "`tlogin $login"
-			Add-Content -path $netrc -value "`tpassword $password"
-		}
-	}
+# 		if($login -and $password) {
+# 			Add-Content -path $netrc -value "machine git.truefitsolutions.com"
+# 			Add-Content -path $netrc -value "`tlogin $login"
+# 			Add-Content -path $netrc -value "`tpassword $password"
+# 		}
+# 	}
 
-  $profile_directory = (join-path ([environment]::GetFolderPath([environment+SpecialFolder]::MyDocuments)) WindowsPowerShell)
+#   $profile_directory = (join-path ([environment]::GetFolderPath([environment+SpecialFolder]::MyDocuments)) WindowsPowerShell)
 	
-	$cert_store = resolve-path (join-path (join-path (join-path "$env:ProgramFiles*" "git") "bin") "curl-ca-bundle.crt")
-	if($cert_store) {
+# 	$cert_store = resolve-path (join-path (join-path (join-path "$env:ProgramFiles*" "git") "bin") "curl-ca-bundle.crt")
+# 	if($cert_store) {
 		
-		$truefit_cert = get-content (join-path $profile_directory truefit.crt) | out-string
-		if(-not (get-content "$cert_store" | select-string "Interceptor")) {
-			Write-Host "Writing TrueFit certificate to $cert_store"
+# 		$truefit_cert = get-content (join-path $profile_directory truefit.crt) | out-string
+# 		if(-not (get-content "$cert_store" | select-string "Interceptor")) {
+# 			Write-Host "Writing TrueFit certificate to $cert_store"
 			
-			Add-Content -path "$cert_store" -value ""
-			Add-Content -path "$cert_store" -value "$truefit_cert"
-		}
-		else {
-			Write-Host "TrueFit certificate already exists in $cert_store"
-		}
- 	}
-	else {
-		Write-Error "Unable to locate git certificate bundle! Have you installed git?"
-	}
+# 			Add-Content -path "$cert_store" -value ""
+# 			Add-Content -path "$cert_store" -value "$truefit_cert"
+# 		}
+# 		else {
+# 			Write-Host "TrueFit certificate already exists in $cert_store"
+# 		}
+#  	}
+# 	else {
+# 		Write-Error "Unable to locate git certificate bundle! Have you installed git?"
+# 	}
 	
-	pop-location
-}
+# 	pop-location
+# }
 
 
 ###########################
@@ -508,7 +509,7 @@ function Display-GitAliases {
   Get-GitAliases | ft -autosize
 }
 
-set-alias g git;
+#set-alias g git;
 
 Export-ModuleMember Setup-Git, Setup-Truefit, Check-RemoteRepository, Test-GitRepository, Track-Branch, Track-Branches, 
                     Checkout-And-Track, TagDeployment, Delete-Tag, Test-Tag, Delete-RemoteTag, Delete-Branch, Test-Branch, 
