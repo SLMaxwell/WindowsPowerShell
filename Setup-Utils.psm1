@@ -161,12 +161,47 @@ function Create-Console($path = $(pwd)) {
   . $console /config "shell" /dir "$path" /cmd powershell -cur_console:n
 }
 
+function Get-PSVersion {
+  Write-Host "`nHashtable listing for `$PSVersionTable:`n"
+  $PSVersionTable
+}
+
+function Get-Version {
+  $Host.Version
+}
+
+function Start-Sublime {
+  #start "C:\Program Files\Sublime Text 3\sublime_text.exe" $args -n
+  #ii "C:\Program Files\Sublime Text 3\sublime_text.exe $args"
+  #& "C:\Program Files\Sublime Text 3\sublime_text.exe" $args
+  #Invoke-Command -ScriptBlock { & "C:\Program Files\Sublime Text 3\sublime_text.exe" $args }
+  Start-Process 'C:\Program Files\Sublime Text 3\sublime_text.exe' -ArgumentList $args
+  #start-process sublime_text.exe $args -n
+}
+
+function Heroku-Migrate {
+  heroku run rake db:migrate;
+}
+
+function Heroku-Quota {
+  heroku ps -a radiant-meadow-14779;
+}
+
 Set-Alias sh Create-Console
 
 Set-Alias Get-Env Get-Environment
-Set-Alias Get-Version $Host.Version
-Set-Alias nano "$(Get-Editor)"
+#Set-Alias nano "$(Get-Editor)"
+#Set-Alias sublime "$(Get-Editor)"
+Set-Alias nano Start-Sublime
+Set-Alias sublime Start-Sublime
+Set-Alias version Get-Version
+Set-Alias psversion Get-PSVersion
+Set-Alias herMigrate Heroku-Migrate
+Set-Alias herQuota Heroku-Quota
 
 Export-ModuleMember `
-	Get-Editor, Test-Syntax, Reload-Profile, Coalesce-Args, Get-LocalOrParentPath, Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, Reload-Module, Create-Console `
-	-Alias ??, dbg, Get-Env, Get-Version, nano, sh
+	Get-Editor, Test-Syntax, Reload-Profile, Coalesce-Args, Get-LocalOrParentPath, `
+  Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
+  Heroku-Migrate, Heroku-Quota, `
+  Get-PSVersion, Create-Console, Get-Version, Start-Sublime -Alias ??, `
+  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota

@@ -1,5 +1,7 @@
 function Setup-Git {
-	git config --global core.autocrlf true
+	git config --global core.autocrlf input
+  git config --global core.safecrlf "false"
+  git config --global core.eol lf
 	git config --global core.editor "'$(get-editor)' -w"
 	git config --global mergetool.p4merge.trustexitcode false
 	git config --global merge.tool p4merge
@@ -7,7 +9,6 @@ function Setup-Git {
 	git config --global difftool.prompt false
 	git config --global mergetool.prompt false
 	git config --global mergetool.keepbackup false
-	git config --global core.safecrlf "false"
 	# rebase on pull instead of merge
 	git config --global branch.autosetuprebase always 
 	
@@ -38,7 +39,7 @@ function Setup-Git {
   
 	git config --global alias.unstage 'reset .'
 	git config --global alias.aa "!git add -A . && git status -s"
-	git config --global alias.pushall '!git push --all; git push --tags'
+	git config --global alias.pushall '!git push --all --recurse-submodules=on-demand; git push --tags'
 	git config --global alias.ls '!git --no-pager log -20 --date=short --pretty=tformat:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset %C(white)%ad%Creset%C(yellow)%d%Creset %Cgreen%s%Creset\"'
 	git config --global alias.ll '!git log --date=short --pretty=tformat:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset %C(white)%ad%Creset%C(yellow)%d%Creset %Cgreen%s%Creset\"'
 	git config --global alias.lg 'log --graph --abbrev-commit --date=relative --pretty=format:\"%C(yellow)%h%Creset - %C(yellow)%an%Creset%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset\"'
@@ -180,7 +181,18 @@ function Test-GitRepository {
 ###########################
 
 function Get-GitDirectory {
-	Get-LocalOrParentPath .git
+  # Get the git directory
+	$gitpath = Get-LocalOrParentPath .git
+
+  # check to see if the path is to a .git submodule directory file.
+  if($gitpath -And ((Get-Item $gitpath) -is [System.IO.FileInfo])) {
+    # if it is a submodule directory file - get the file contents which contain the gitdir.
+    $gitpath = Get-Content $gitpath
+    $gitpath = $gitpath.Replace("gitdir: ","").trim();
+  }
+
+  #return the gitpath
+  $gitpath
 }
 
 ###########################
@@ -420,7 +432,7 @@ function Get-GitBranch($gitDir = $(Get-GitDirectory), [Diagnostics.Stopwatch]$sw
 	if ($gitDir) {
 		dbg 'Finding branch' $sw
 		dbg "$gitDir"
-		$r = ''; $b = ''; $c = ''
+		$r = ''; $b = ''; $c = ''; $sub = ''
 		if (Test-Path $gitDir\rebase-merge\interactive) {
 			dbg 'Found rebase-merge\interactive' $sw
 			$r = '|REBASE-i'
@@ -471,7 +483,13 @@ function Get-GitBranch($gitDir = $(Get-GitDirectory), [Diagnostics.Stopwatch]$sw
 			}
 		}
 
-		"$c$($b -replace 'refs/heads/','')$r"
+    # add the submodule identifier if it should be present.
+    if ($gitdir -like '*.git/modules/*') {
+      $sub = 'SUB:'
+    }
+
+
+		"$c$sub$($b -replace 'refs/heads/','')$r"
 	}
 }
 
@@ -492,4 +510,6 @@ function Display-GitAliases {
 
 set-alias g git;
 
-Export-ModuleMember Setup-Git, Setup-Truefit, Check-RemoteRepository, Test-GitRepository, Track-Branch, Track-Branches, Checkout-And-Track, TagDeployment, Delete-Tag, Test-Tag, Delete-RemoteTag, Delete-Branch, Test-Branch, Enable-GitColors, Get-GitAliasPattern, Get-GitBranch, Display-GitAliases -alias g
+Export-ModuleMember Setup-Git, Setup-Truefit, Check-RemoteRepository, Test-GitRepository, Track-Branch, Track-Branches, 
+                    Checkout-And-Track, TagDeployment, Delete-Tag, Test-Tag, Delete-RemoteTag, Delete-Branch, Test-Branch, 
+                    Enable-GitColors, Get-GitAliasPattern, Get-GitBranch, Get-GitDirectory, Display-GitAliases -alias g

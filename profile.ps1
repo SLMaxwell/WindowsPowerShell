@@ -1,14 +1,28 @@
 # Directory where this file is located
 $script:pwd = Split-Path $MyInvocation.MyCommand.Path
 
-# $paths = Join-Path $pwd paths.txt
-# if(Test-Path $paths) {
-# 	Get-Content $paths | foreach {
-# 		if(Test-Path $_) {
-# 			$env:Path += ";" + $_
-# 		}
-# 	}
-# }
+################################
+#
+# Load Environment path Prefixes
+#
+################################
+
+$prefixPathFile = Join-Path $pwd additionalEnvPaths.txt
+$prefixPaths = ""
+if(Test-Path $prefixPathFile) {
+  ForEach ($pathToAdd in Get-Content $prefixPathFile) {
+    if(Test-Path $pathToAdd) {
+      $prefixPaths = "$prefixPaths$pathToAdd;"
+    }
+  }
+}
+$env:path = "$prefixPaths$env:path"
+
+############################################
+#
+# Load Environment path Powershell Specifics
+#
+############################################
 
 $script:powershell_path = "C:\Windows\System32\WindowsPowerShell\v1.0".ToLower()
 if((-Not $env:path.ToLower().contains($script:powershell_path)) -And (Test-Path $script:powershell_path)) {
@@ -19,13 +33,6 @@ $script:rsync_path = Join-Path $pwd 'rsync'
 if(Test-Path $script:rsync_path) {
   $env:path = "$env:path;$script:rsync_path"
 }
-
-
-# $devkit = "C:\opscode\chefdk\embedded\"
-# if(Test-Path $devkit) {
-# 	$env:RI_DEVKIT = "$devkit"
-# 	$env:path = "$devkit\bin;$devkit\mingw\bin;$env:path"
-# }
 
 $env:SSL_CERT_FILE = Join-Path $pwd cacert.pem
 
@@ -48,6 +55,9 @@ try {
 catch {
   Write-Error "Error setting GITDIR! " + Error[0].Exception
 }
+
+## Enable use of Hyper-V for vagrant
+$env:VAGRANT_DEFAULT_PROVIDER = "hyperv"
 
 ###########################
 #
@@ -109,4 +119,24 @@ function TabExpansion($line, $lastWord) {
     }
 }
 
-#Check-RemoteRepository $pwd -verbose
+##############################
+#
+# Override Powershell Defaults
+#
+##############################
+Set-Alias ls Get-ChildItem-Format-Wide -option AllScope
+if (Test-Path alias:\cd) { Remove-Item -Force alias:\cd }
+function cd {
+  if ($args[0] -eq '-') { 
+    $pwd=$OLDPWD; 
+  } else { 
+    $pwd=$args[0]; 
+  } 
+
+  $tmp=pwd; 
+
+  if ($pwd) { 
+    Set-Location $pwd; 
+  } 
+  Set-Variable -Name OLDPWD -Value $tmp -Scope global;
+}

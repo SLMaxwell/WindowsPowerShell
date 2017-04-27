@@ -180,5 +180,6 @@ function Get-NetworkStatistics
 }
 
 Set-Alias listen Get-NetworkStatistics
+Set-Alias ll Get-ChildItem-Format-All
 
-Export-ModuleMember grep, head, rm, wc, which, Get-NetworkStatistics -Alias which, listen
+Export-ModuleMember grep, head, rm, wc, which, Get-NetworkStatistics -Alias which, listen, ll
