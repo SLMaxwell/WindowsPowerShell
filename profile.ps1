@@ -140,3 +140,6 @@ function cd {
   } 
   Set-Variable -Name OLDPWD -Value $tmp -Scope global;
 }
+
+# https://github.com/samneirinck/posh-docker
+Import-Module posh-docker
