@@ -198,10 +198,11 @@ Set-Alias version Get-Version
 Set-Alias psversion Get-PSVersion
 Set-Alias herMigrate Heroku-Migrate
 Set-Alias herQuota Heroku-Quota
+Set-Alias vscode code
 
 Export-ModuleMember `
 	Get-Editor, Test-Syntax, Reload-Profile, Coalesce-Args, Get-LocalOrParentPath, `
   Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
   Heroku-Migrate, Heroku-Quota, `
   Get-PSVersion, Create-Console, Get-Version, Start-Sublime -Alias ??, `
-  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota
+  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode
