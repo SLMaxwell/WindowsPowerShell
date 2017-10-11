@@ -45,6 +45,11 @@ function dki {
   docker run --rm -i -t -P $args /bin/bash
 }
 
+# Run interactive container via docker-compose (e.g. dcrun web)
+function dcrun {
+  docker-compose run --rm $args /bin/bash
+}
+
 # Execute interactive container, e.g., $dex base /bin/bash
 function dex {
   docker exec -it $args
