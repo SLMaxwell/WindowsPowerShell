@@ -36,7 +36,7 @@ function Test-Syntax {
 	param($path, [switch]$verbose)
 
 	if ($verbose) {
-		$VerbosePreference = ‘Continue’
+		$VerbosePreference = ï¿½Continueï¿½
 	}
 
 	trap { Write-Warning $_; $false; continue }
@@ -187,6 +187,10 @@ function Heroku-Quota {
   heroku ps -a radiant-meadow-14779;
 }
 
+function Run-SSH {
+  ssh pi@raspberrypi-1.local
+}
+
 Set-Alias sh Create-Console
 
 Set-Alias Get-Env Get-Environment
@@ -199,10 +203,11 @@ Set-Alias psversion Get-PSVersion
 Set-Alias herMigrate Heroku-Migrate
 Set-Alias herQuota Heroku-Quota
 Set-Alias vscode code
+Set-Alias pi-1 Run-SSH
 
 Export-ModuleMember `
 	Get-Editor, Test-Syntax, Reload-Profile, Coalesce-Args, Get-LocalOrParentPath, `
   Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
   Heroku-Migrate, Heroku-Quota, `
-  Get-PSVersion, Create-Console, Get-Version, Start-Sublime -Alias ??, `
-  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode
+  Get-PSVersion, Create-Console, Get-Version, Start-Sublime, Run-SSH -Alias ??, `
+  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode, pi-1
