@@ -143,3 +143,4 @@ function cd {
 
 # https://github.com/samneirinck/posh-docker
 Import-Module posh-docker
+$Env:COMPOSE_CONVERT_WINDOWS_PATHS=1
