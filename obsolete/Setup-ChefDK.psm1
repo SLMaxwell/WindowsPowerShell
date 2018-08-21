@@ -4,6 +4,6 @@
 #
 #############################################
 
-$env:CHEFDK_HOME = "C:\Users\Scott\.chefdk"
+# $env:CHEFDK_HOME = "C:\Users\Scott\.chefdk"
 
-chef shell-init powershell | Invoke-Expression
+# chef shell-init powershell | Invoke-Expression
