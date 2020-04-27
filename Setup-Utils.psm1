@@ -187,8 +187,19 @@ function Heroku-Quota {
   heroku ps -a radiant-meadow-14779;
 }
 
-function Run-SSH {
+function pi-1 {
   ssh pi@raspberrypi-1.local
+}
+
+function pi-2 {
+  ssh pi@raspberrypi-2.local
+}
+
+function pi-3 {
+  ssh pi@raspberrypi-3.local
+}
+function pi-4 {
+  ssh pi@raspberrypi-4.local
 }
 
 Set-Alias sh Create-Console
@@ -203,11 +214,12 @@ Set-Alias psversion Get-PSVersion
 Set-Alias herMigrate Heroku-Migrate
 Set-Alias herQuota Heroku-Quota
 Set-Alias vscode code
-Set-Alias pi-1 Run-SSH
 
-Export-ModuleMember `
+Export-ModuleMember -Function `
 	Get-Editor, Test-Syntax, Reload-Profile, Coalesce-Args, Get-LocalOrParentPath, `
   Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
   Heroku-Migrate, Heroku-Quota, `
-  Get-PSVersion, Create-Console, Get-Version, Start-Sublime, Run-SSH -Alias ??, `
-  dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode, pi-1
+  Get-PSVersion, Create-Console, Get-Version, Start-Sublime, `
+  pi-1, pi-2, pi-3, pi-4 `
+  -Alias `
+  ??, dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode
