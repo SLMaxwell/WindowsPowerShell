@@ -201,6 +201,9 @@ function pi-3 {
 function pi-4 {
   ssh pi@raspberrypi-4.local
 }
+function hasm {
+  ruby C:\Development\ruby_training\ruby_test_code\hack_assembler\hasm $args
+}
 
 Set-Alias sh Create-Console
 
@@ -220,6 +223,6 @@ Export-ModuleMember -Function `
   Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
   Heroku-Migrate, Heroku-Quota, `
   Get-PSVersion, Create-Console, Get-Version, Start-Sublime, `
-  pi-1, pi-2, pi-3, pi-4 `
+  pi-1, pi-2, pi-3, pi-4, hasm `
   -Alias `
   ??, dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode
