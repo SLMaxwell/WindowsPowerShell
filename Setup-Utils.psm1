@@ -205,6 +205,15 @@ function hasm {
   ruby C:\Development\ruby_training\ruby_test_code\hack_assembler\hasm $args
 }
 
+function fixWSL {
+  # Periodically after docker issues WSL fails to recognize the /mnt/c folder.
+  # When this happens, many of the profile files and folders do not process.
+  #
+  # According to: https://github.com/microsoft/WSL/issues/4377
+  # That error occurs if the hidden wslhost.exe process is died/killed. Just use wsl.exe --shutdown and restart it.
+  wsl.exe --shutdown
+}
+
 Set-Alias sh Create-Console
 
 Set-Alias Get-Env Get-Environment
@@ -223,6 +232,6 @@ Export-ModuleMember -Function `
   Debug, Get-ScriptDirectory, Get-Environment, ConvertTo-PlainText, `
   Heroku-Migrate, Heroku-Quota, `
   Get-PSVersion, Create-Console, Get-Version, Start-Sublime, `
-  pi-1, pi-2, pi-3, pi-4, hasm `
+  pi-1, pi-2, pi-3, pi-4, hasm, fixWSL `
   -Alias `
   ??, dbg, Get-Env, nano, sublime, sh, version, psversion, herMigrate, herQuota, vscode
