@@ -13,12 +13,16 @@ function dl {
 
 # Get container process
 function dps  {
-  docker ps $args
+  tput rmam
+  docker ps --format="table {{.Names}}\t{{.ID}}\t{{.Image}}\t{{.RunningFor}}\t{{.State}}\t{{.Status}}" $args | sort
+  tput smam
 }
 
 # Get process included stop container
 function dpa { 
-  docker ps -a $args
+  tput rmam
+  docker ps -a --format="table {{.Names}}\t{{.ID}}\t{{.Image}}\t{{.RunningFor}}\t{{.State}}\t{{.Status}}" $args | sort
+  tput smam
 }
 
 function db {
